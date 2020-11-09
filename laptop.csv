@@ -1,0 +1,101 @@
+﻿Index,Name,HDD,SSD,RAM,Weight,Processor,Price
+0,Acer aspire 3 slim A31522,0,1024,4,2,AMD Radeon,30000
+1,Acer aspire 5 A51551G5673,1024,0,8,2,Intel i5,50000
+2,Apple macbook MNY H2HN/A,0,256,8,1,Intel i5,112000
+3,Apple macbook pro,0,512,16,2,Intel i9,225000
+4,Apple macbook pro MR942 HNA/a,0,512,16,2,Intel i9,240000
+5,Apple macbook pro MUHQ 2HN/A,0,128,8,2,Intel i5,118000
+6,Asus Rog G703GIE 5148T,2024,512,64,5,Intel i9,500000
+7,Asus Rog strix scar 4 G531GV,0,1024,16,3,Intel i7,150000
+8,Asus Rog Zephyrus,0,512,16,2,Intel i7,150000
+9,Asus vivobook 15 XY12DEAJ 4490,1024,0,8,2,AMD Radeon,40000
+10,Asus vivobook intel celeron N4000,512,0,8,2,Intel i9,454554
+11,Dell inspiron 15,1024,0,4,3,AMD Radeon,34000
+12,Dell inspiron 5575,1024,0,8,2,AMD Radeon,54000
+13,Dell new XPS 9370,1024,256,8,2,Intel i5,117000
+14,Dell vostro 3480,1024,0,4,2,Intel i3,33000
+15,HP 14 QCS 0019 TU,512,256,4,2,Intel i3,39000
+16,HP 15 QDS 0045 TU,512,256,4,2,Intel i3,42000
+17,HP Notebook 7341DASY,1024,0,4,4,Intel i3,66000
+18,HP Touchscreen G3590012,1024,128,6,1,Intel i3,94000
+19,i Ball ComBook Celeron 32,512,0,3,2,Intel i9,15000
+20,I Ball excellence OHD,32,0,2,1,Intel i9,13000
+21,i Ball premio V30,32,512,4,1,Intel i3,20000
+22,Lenovo ideapad 330s,1024,0,4,2,Intel i5,44000
+23,Microsoft Surface Laptop,0,512,16,1,Intel i7,196000
+24,MSI Gaming GT83 TRG007 IN,1024,512,32,6,Intel i7,420
+25,Omen X2S,0,2048,16,3,Intel i9,330
+26,Razer Blade Gaming Laptop RTX2510,1024,512,16,2,Intel i7,295
+27,Razer Blade Gaming Laptop RTX,0,512,16,2,Intel i7,380000
+28,Razer Blade Stealth,0,256,8,1,Intel i8,180000
+29,Acer aspire 3UN.GNVSI.009,1024,0,4,2,AMD Radeon,35000
+30,Acer Aspire A315-12,1024,0,8,3,Intel Pentium,30000
+31,Acer Aspire E15,1024,0,8,2,Intel i3,40000
+32,Acer Aspire ES-476,1024,0,16,2,Intel i3,40000
+33,Acer Aspire ES15NXG2KXI0225,1024,0,16,3,AMD Radeon,25000
+34,Acer Nitro AN51542,1024,0,8,3,AMD Radeon,66000
+35,Acer Nitro 7,0,1024,64,3,Intel i5,100000
+36,Acer 1 AOZ422,1024,0,16,2,AMD Radeon,30000
+37,Acer 1FRT2658,1024,0,16,2,AMD Radeon,25000
+38,Acer Swift 3NXGNX SA003,0,128,8,2,Intel i3,50000
+39,Apple Macbook Air,0,128,8,2,Intel i5,85000
+40,Apple Macbook Air core A1932,0,256,4,1,Intel i5,118000
+41,Apple Macbook Air MRQN2HN/a,0,256,8,1,Intel i5,90000
+42,Toshiba Satellite C50-AP0011,500,0,4,2,Intel Pentium,15000
+43,Apple Macbook pro MPXT2HN/a,0,256,4,2,Intel i5,130000
+44,Apple Macbook pro MR9V2H9/a,0,512,4,2,Intel i5,150000
+45,Apple Macbook pro MUHY2HN,0,256,4,2,Intel i5,136000
+46,Apple Macbook pro MV902HN,0,512,4,2,Intel i5,190000
+47,Apple Macbook pro MV932HN,0,512,6,2,Intel i9,226000
+48,Asus F570,1024,0,4,2,AMD Radeon,58000
+49,Asus X512 DAEJ 503,0,512,2,3,AMD Radeon,52000
+50,Asus Rog Strix GG731 GT,1024,256,4,3,Intel i3,68000
+51,Dell Alienware 17 Area 51,1024,512,64,8,Intel i9,520000
+52,HP 15 ryzen R31024,1024,0,4,3,AMD Radeon,43000
+53,HP 17 KJS1523 High Performance,1024,0,6,3,Intel i5,92000
+54,HP ESS EN 250,256,0,4,2,Intel i3,32000
+55,HP Flagship RTHS456,1024,0,6,3,Intel i5,80000
+56,HP Pavillon X360 14DH 0101TU,512,256,4,2,Intel i3,56000
+57,HP spectre x360,0,256,8,2,Intel i5,130000
+58,HP Zbook G5 Mobile workstation,0,512,8,3,Intel i5,300000
+59,Lenovo ideapad 130,1024,0,4,2,AMD Radeon,20000
+60,Lenovo ideapad 130APU,1024,0,4,3,AMD Radeon,25000
+61,Lenovo ideapad 330,1024,0,8,3,Intel i3,31000
+62,Lenovo ideapad 330 Ryzen,1024,0,4,2,AMD Radeon,25000
+63,Lenovo ideapad 520,1024,0,4,2,Intel i3,40000
+64,Lenovo ideapad L340,1024,128,16,2,Intel i7,100000
+65,Lenovo ideapad S145,1024,0,4,2,Intel i5,30000
+66,Lenovo ideapad S145 Pentium Gold,1024,0,4,2,Intel Pentium,40000
+67,Lenovo ideapad S340,512,512,8,3,Intel i5,55000
+68,Lenovo ideapad S540,1024,128,8,2,Intel i5,60000
+69,Lenovo Legion Y450,1024,256,8,2,Intel i5,70000
+70,Lenovo Thinkpad E490,1024,128,8,2,Intel i5,50000
+71,Lenovo Thinkpad T430,1024,0,8,3,Intel i5,20000
+72,Lenovo Thinkpad X250,1024,0,4,3,Intel i5,25000
+73,Lenovo V10015ASD,1024,0,4,2,AMD Radeon,18000
+74,Lenovo V130,1024,0,4,2,Intel Pentium,35000
+75,Lenovo V145,1024,0,4,2,AMD Radeon,50000
+76,Lenovo X1,0,256,8,3,Intel i5,35000
+77,Lenovo X540,1024,512,8,3,Intel i5,65000
+78,Lenovo Yoga 520,1024,0,4,2,Intel i5,40000
+79,Microsoft Surface Go MCZ0015,0,128,8,1,Intel Pentium,50000
+80,HP chromebook x360,2048,0,4,3,Intel i5,55000
+81,Asus X507,1024,0,8,2,Intel i5,50000
+82,AGB Orion RA0301,1024,1024,8,2,Intel i5,100000
+83,Asus vivobook 15 XY12DEAJ 504T,1024,0,8,3,AMD Radeon,58000
+84,Lenovo ideapad 520 81BFOOKEAN,2048,0,8,2,Intel i5,80000
+85,HP pavillion 15-CS208 2TX,1024,256,8,2,Intel i5,65000
+86,Dell Lattitude E72270,2048,512,8,1,Intel i7,120000
+87,Asus Swift 3,1024,0,8,2,Intel i5,60000
+88,RDP Thinbook 1310ECP,32,0,4,1,Intel Pentium,20000
+89,RDP Thinbook 1450ECH,500,0,2,2,Intel Pentium,20000
+90,RDP Thinbook 1450ECP,32,0,4,2,Intel i3,40000
+91,RDP Thinbook 1430,32,0,2,2,Intel Pentium,15000
+92,Fujitsu Stylistic Q738,0,256,8,1,Intel i5,40000
+93,RDP Thinbook 1310 EC1,32,0,4,1,Intel Pentium,15000
+94,RDP Thinbook 1450 EC2,32,0,2,2,Intel Pentium,20000
+95,Micromax Canvas Laptab LT666,32,0,2,1,Intel Pentium,15000
+96,HP 15-da0295TU,1024,0,4,2,Intel Pentium,30000
+97,Acer Aspire A320-32,1024,0,4,3,Intel i3,40000
+98,Microsoft Surface Pro 6 1796,512,128,8,1,Intel i5,80000
+99,Lenovo V145-81MT001EIY,1024,0,4,2,AMD Radeon,20000
