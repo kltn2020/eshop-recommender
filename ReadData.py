@@ -1,6 +1,9 @@
 #!/usr/bin/python
 import psycopg2
 from config import config
+from pandas import DataFrame
+import codecs
+
 
 HOST_IP = "35.213.174.112"
 DB_NAME = "eshop"
@@ -10,7 +13,8 @@ PASS = "password123"
 def getData():
     """ Connect to the PostgreSQL database server """
     conn = None
-    records = None
+    df = None
+
     try:
         # read connection parameters
         #params = config()
@@ -33,15 +37,25 @@ def getData():
 
         # display the PostgreSQL database
         records = cur.fetchall()
-        records = [("id", "sku", "name", "brand_id", "cpu", "gpu", "os", "ram", "display", "display_resolution", "display_screen", "weight", "rating_avg", "discount_price")] + records;
-        print("Total rows are:  ", len(records))
+        df = DataFrame(records)
+        df.columns = [desc[0] for desc in cur.description]
+        #print (df)
+
+        #print("Total rows are:  ", len(records))
+        #records = [("id", "sku", "name", "brand_id", "cpu", "gpu", "os", "ram", "display", "display_resolution", "display_screen", "weight", "rating_avg", "discount_price")] + records;
+        #print("Total rows are:  ", len(records))
+        
+        file = codecs.open("data.txt", "w", "utf-8")
+        
         
         for row in records:
-            print (row)
+            #print (row)
+            file.write('\n' + str(row))
             #print("Id: " + str(row[0]) + " os: " + str(row[6]) + " name: " +  row[2] + " - price: " + str(row[13]))
             #print("Id: " + str(row[0]))
 	    # close the communication with the PostgreSQL
         cur.close()
+        file.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
@@ -49,7 +63,7 @@ def getData():
             conn.close()
             print('Database connection closed.')
 
-    return records
+    return df
 
 if __name__ == '__main__':
     getData()

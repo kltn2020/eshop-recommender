@@ -1,19 +1,19 @@
 #importing required modules and reading the file called 'laptop'
 import pandas as pd
 from pandas import DataFrame
-
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from ReadData import getData
 
 #df=pd.read_csv('laptop.csv')
- 
-df = DataFrame(getData())
-
-print (df)
+df = getData()
+#print (df)
 
 #list of specifications of laptops to work on
-specs=['HDD','SSD','RAM','Processor','Weight','Price']
+#("id", "sku", "name", "brand_id", "cpu", "gpu", "os", "ram", "display", "display_resolution", "display_screen", "weight", "rating_avg", "discount_price"
+#specs=['brand_id','cpu','os','ram','display']
+specs=['brand_id','cpu','os','ram','display','weight', 'rating_avg', 'discount_price']
+#specs=['name','os', 'display', 'ram']
 
 #converting all integer values to string so that they can be concattinated later in the program
 for column in specs:
@@ -21,15 +21,16 @@ for column in specs:
 
 #a function to combine the values of the important columns into a single string
 def combined_specs(row):
-    return(row['HDD']+" "+row['SSD']+" "+row['RAM']+" "+row['Processor']+" "+row['Weight']+" "+row['Price'])
+    #return(row['brand_id']+" "+row['cpu']+" "+row['os']+" "+row['ram']+" "+row['display'])
+    return(row['brand_id']+" "+row['cpu']+" "+row['os']+" "+row['ram']+" "+row['display']+" "+row['weight']+" "+row['rating_avg']+" "+row['discount_price'])
 
 #a function to get the Name from Index
 def get_name_from_index(index):
-    return df[df.Index==index]['Name'].values[0]
+    return df[df.id==index]['name'].values[0]
 
 #a function to get the Index from Name
 def get_index_from_name(name):
-    return df[df.Name==name]['Index'].values[0]
+    return df[df.name==name]['id'].values[0]
 
 #applly the function to each row in the dataframe to store the combined strings into a new column called combimed_specs
 df['combined_specs']=df.apply(combined_specs,axis=1)
@@ -42,7 +43,7 @@ count_matrix=count_matrix.fit_transform(df['combined_specs'])
 cosine_sim_mat=cosine_similarity(count_matrix)
 
 #Get the most sold laptop or most popular laptop
-laptop_popular='HP pavillion 15-CS208 2TX'
+laptop_popular='Laptop Asus VivoBook X509MA N4020/4GB/256GB/Win10 (BR271T)'
 
 #Find laptop index of popular laptop
 laptop_index=get_index_from_name(laptop_popular)
