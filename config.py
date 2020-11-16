@@ -3,10 +3,14 @@ from configparser import ConfigParser
 
 
 def config(filename='database.ini', section='postgresql'):
+    
+    print (filename)
+    print (section)
     # create a parser
     parser = ConfigParser()
     # read config file
     parser.read(filename)
+    print (parser)
 
     # get section, default to postgresql
     db = {}
@@ -18,3 +22,6 @@ def config(filename='database.ini', section='postgresql'):
         raise Exception('Section {0} not found in the {1} file'.format(section, filename))
 
     return db
+
+if __name__ == '__main__':
+    config()

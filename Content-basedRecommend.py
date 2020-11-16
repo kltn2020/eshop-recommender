@@ -1,8 +1,16 @@
 #importing required modules and reading the file called 'laptop'
 import pandas as pd
+from pandas import DataFrame
+
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-df=pd.read_csv('laptop.csv')
+from ReadData import getData
+
+#df=pd.read_csv('laptop.csv')
+ 
+df = DataFrame(getData())
+
+print (df)
 
 #list of specifications of laptops to work on
 specs=['HDD','SSD','RAM','Processor','Weight','Price']
