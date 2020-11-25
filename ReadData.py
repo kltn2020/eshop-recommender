@@ -5,9 +5,9 @@ from pandas import DataFrame
 import codecs
 
 
-HOST_IP = "35.213.174.112"
+HOST_IP = "localhost"
 DB_NAME = "eshop"
-USER_NAME = "phathdt379"
+USER_NAME = "postgres"
 PASS = "password123"
 
 def getData():
@@ -41,7 +41,7 @@ def getData():
         df.columns = [desc[0] for desc in cur.description]
         #print (df)
 
-        #print("Total rows are:  ", len(records))
+        print("Total rows are:  ", len(records))
         #records = [("id", "sku", "name", "brand_id", "cpu", "gpu", "os", "ram", "display", "display_resolution", "display_screen", "weight", "rating_avg", "discount_price")] + records;
         #print("Total rows are:  ", len(records))
         
