@@ -1,0 +1,448 @@
+#importing required modules
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import ReadData as data
+import codecs
+
+##### FUNCTION #####
+#a function to combine the values of the important columns into a single string
+def combined_specs(row):
+    return(row['brand_id']+" "+row['cpu']+" "+row['os']+" "+row['ram']+" "+row['display']+" "+row['display_resolution']+" "+row['display_screen']+" "+row['weight']+" "+row['price']+" "+row['discount_price'])
+
+
+#a function to get the Name from Index
+def get_name_from_index(index):
+    return df[df.id==index]['name'].values[0]
+
+#a function to get the Index from Name
+def get_index_from_name(name):
+    return df[df.name==name]['id'].values[0]
+
+#
+def get_contentbased_laptops(laptopName, df):
+    specs=['brand_id','cpu','os','ram','display', 'display_resolution', 'display_screen', 'weight', 'price', 'discount_price']
+
+    #converting all integer values to string so that they can be concattinated later in the program
+    for column in specs:
+        df[column]=df[column].apply(str)
+    
+    #applly the function to each row in the dataframe to store the combined strings into a new column called combined_specs
+    df['combined_specs']=df.apply(combined_specs,axis=1)
+
+    # 2. get list result
+    #convert a collection of data into Tfidf matrix
+    vectorizer = TfidfVectorizer()
+    vectorizer=vectorizer.fit_transform(df['combined_specs'])
+
+    #convert a the count matrix into cosine similarity matrix
+    cosine_sim_mat=cosine_similarity(vectorizer)
+
+    #Find laptop index of popular laptop
+    laptop_index=get_index_from_name(laptopName)
+
+    #Enumerating through all the similarity scores of laptop_popular
+    #making a ordered pair of laptop index and similarity scores
+    #and returning a list of such ordered pairs in the form of (laptop_index,similarity_scores)
+    similar_laptops=list(enumerate(cosine_sim_mat[laptop_index]))
+    #print (cosine_sim_mat[laptop_index])
+
+    #Sort similar_laptops in descending order of similarity scores and exclude the similar laptop itself
+    sorted_similar_laptops=sorted(similar_laptops,key=lambda x:x[1],reverse=True)[1:]
+
+    return sorted_similar_laptops
+
+
+def get_collaborative_laptops(laptopName, df):
+    specs=['brand_id','cpu','os','ram','display','weight', 'rating_avg', 'discount_price']
+
+    #converting all integer values to string so that they can be concattinated later in the program
+    for column in specs:
+        df[column]=df[column].apply(str)
+    
+    #applly the function to each row in the dataframe to store the combined strings into a new column called combined_specs
+    df['combined_specs']=df.apply(combined_specs,axis=1)
+
+    # 2. get list result
+    #convert a collection of data into Tfidf matrix
+    vectorizer = TfidfVectorizer()
+    vectorizer=vectorizer.fit_transform(df['combined_specs'])
+
+    #convert a the count matrix into cosine similarity matrix
+    cosine_sim_mat=cosine_similarity(vectorizer)
+
+    #Find laptop index of popular laptop
+    laptop_index=get_index_from_name(laptopName)
+
+    #Enumerating through all the similarity scores of laptop_popular
+    #making a ordered pair of laptop index and similarity scores
+    #and returning a list of such ordered pairs in the form of (laptop_index,similarity_scores)
+    similar_laptops=list(enumerate(cosine_sim_mat[laptop_index]))
+    #print (cosine_sim_mat[laptop_index])
+
+    #Sort similar_laptops in descending order of similarity scores and exclude the similar laptop itself
+    sorted_similar_laptops=sorted(similar_laptops,key=lambda x:x[1],reverse=True)[1:]
+
+    return sorted_similar_laptops
+
+
+def ShowResults(top, list, laptopName):
+    i=1
+    print("===== LAPTOPS RECOMMEND =====")
+    print("The top " + str(top) + " recommended laptops similar to '" + laptopName + "' are: ")
+    for element in list:
+        if i <= top:
+            print(i, ': ', element[0], '-', get_name_from_index(element[0]))
+            i+=1
+
+##### MAIN #####
+# 1. get data
+df = data.getDataProducts()
+#df = data.getDataReviews()
+laptopInput='Laptop Dell Inspiron 7591 i5 9300H/8GB/256GB/3GB GTX1050/Win10 (N5I5591W)'
+#laptopInput='Laptop Apple MacBook Air 2020 i5 1.1GHz/8GB/256GB (Z0YL)'
+
+# 2. get recommend laptop list
+laptopsRecommend = get_contentbased_laptops(laptopInput, df)
+#laptopsRecommend = get_collaborative_laptops(laptopInput, df)
+
+# 3
+ShowResults(5, laptopsRecommend, laptopInput)
+
+
+'''
+  
+import csv
+import ast
+import sys
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
+import numpy as np
+import pandas as pd
+from flask import request
+from app import response
+from datetime import datetime
+from flask_restful import Resource
+
+
+class Recommendation(Resource):
+    def get(self, user_id, genres):
+        def recommend():
+            # Step 1: Read CSV File
+            dataframe = pd.read_csv("movies_metadata.csv")
+            all_ratings = pd.read_csv("ratings.csv")
+            all_dataframe = dataframe
+
+            def get_title_from_index(index):	  
+                return dataframe[dataframe.index == index]["title"].values[0]
+
+            def get_index_from_movieid(id):
+                return dataframe[dataframe.movieId == id]["index"].values[0]	                return dataframe[dataframe.movieId == id]["index"].values[0]
+
+
+            def get_id_from_index(index):
+                return dataframe[dataframe.index == index]["movieId"].values[0]
+
+            def get_posterpath_from_index(index):
+                return dataframe[dataframe.index == index]["poster_path"].values[0]
+
+            def get_rating_from_movieid(movieId, userId):
+                all_ratings = pd.read_csv('ratings.csv')
+                df = all_ratings[all_ratings.movieId == int(
+                    movieId)][all_ratings.userId == int(userId)]
+                df = df.nlargest(1, ['timestamp'])
+                if not df.empty:
+                    return df["rating"].values[0]
+                else:
+                    return 0
+
+            def write_csv():
+                with open('genres.csv', 'a', newline='') as f:
+                    thewriter = csv.writer(f)
+                    thewriter.writerow(
+                        [user_id, genres, datetime.timestamp(datetime.now())])
+
+            def get_movies_from_genres(query):
+                dataframe = pd.read_csv("movies_metadata.csv")
+
+                def get_kw(row):
+                    row = ast.literal_eval(row)
+                    res = ''
+                    for i in row:
+                        res += i['name']+' '
+                    return res
+
+                # Select Features
+                features = ['genres', 'title']  # keyword, cast overview
+
+                # Create a column in dataframe which combines all selected features
+                for feature in features:
+                    dataframe[feature] = dataframe[feature].fillna('')
+
+                def combined_features(row):
+                    try:
+                        return get_kw(row['genres']) + row['title']
+                    except:
+                        print("Error: ", row)
+
+                dataframe['combined_features'] = dataframe.apply(
+                    combined_features, axis=1)
+                dataframe['combined_features']
+                dataframe = dataframe[dataframe['combined_features'].str.lower().str.contains(
+                    query, regex=False)]
+                dataframe = dataframe.nlargest(12, ['vote_average'])
+
+                res = []
+                temp = []
+                for movieId in dataframe["movieId"]:
+                    temp.append({'id': movieId})
+                res.append({'type': 'search', 'movie_data': temp})
+                return {'result': res}
+
+            res = []
+
+            # get popular movies
+            def get_popular_movies(df):
+                dataframe = df.nlargest(12, ['popularity'])
+                list_popular_movie = np.asarray(dataframe['movieId'])
+                list_popular_movie_temp = []
+                for movieid in list_popular_movie:
+                    rating = get_rating_from_movieid(movieid, user_id)
+                    list_popular_movie_temp.append(
+                        {'id': int(movieid), 'title': '', 'rating': rating})
+                res.append(
+                    {'type': 'popular', 'movie_data': list_popular_movie_temp})
+
+            def get_rec_genres_movies(arr_genres):
+                genres_text = arr_genres.split('|')
+                for g in genres_text:
+                    if g != '':
+                        arr = get_movies_from_genres(g)["result"]
+                        for i in arr:
+                            res.append({'type': 'genres|'+g.title(),
+                                        'movie_data': i["movie_data"]})
+
+            # get movies based on genres a NEW USER chose on dialog
+            def get_movies_from_genres_dialog():
+                if genres is not None and genres != '-1':
+                    write_csv()
+                    get_rec_genres_movies(genres)
+
+            # get movies based on genres a NEW USER chose which are saved in csv
+            def get_movies_from_genres_csv():
+                genres_df = pd.read_csv('genres.csv')
+                genres_df = genres_df.nlargest(1, ['timestamp'])
+                genres_df = genres_df[genres_df.userId == int(user_id)]
+                ratings_df = all_ratings[all_ratings.userId == int(user_id)]
+                if not genres_df.empty and ratings_df.empty:
+                    get_rec_genres_movies(genres_df["genres"].values[0])
+
+            get_popular_movies(dataframe)
+            get_movies_from_genres_dialog()
+            get_movies_from_genres_csv()
+
+            # filter user and his favorite movies
+            ratings = all_ratings[all_ratings.userId == int(user_id)]
+            ratings = ratings.sort_values(by='timestamp', ascending=False)
+            ratings = ratings.drop_duplicates(subset=['movieId'], keep='first')
+            pivot = ratings["rating"].mean()
+            ratings = ratings[ratings.rating >= pivot]
+            ratings = ratings.nlargest(20, ['rating'])
+            ratings = ratings.nlargest(3, ['timestamp'])
+
+            # Content-based recommend
+            # def get_contentbased_movies():
+            #     def get_kw(row):
+            #         row = ast.literal_eval(row)
+            #         res = ''
+            #         for i in row:
+            #             res += i['name']+' '
+            #         return res
+
+            #     # Step 2: Select Features
+            #     features = ['keywords', 'genres']  # keyword, cast overview
+
+            #     # Step 3: Create a column in dataframe which combines all selected features
+            #     for feature in features:
+            #         dataframe[feature] = dataframe[feature].fillna('')
+
+            #     def combined_features(row):
+            #         try:
+            #             return get_kw(row['keywords']) + " " + get_kw(row['genres'])
+            #         except:
+            #             print("Error: ", row)
+
+            #     dataframe['combined_features'] = dataframe.apply(
+            #         combined_features, axis=1)  # apply function to each row
+
+            #     # Step 4: Create count matrix from this new combined column
+            #     cv = CountVectorizer()
+            #     count_matrix = cv.fit_transform(dataframe["combined_features"])
+
+            #     # Step 5: Compute the Cosine Similarity based on the count_matrix
+            #     cosine_sim = cosine_similarity(count_matrix)
+
+            #     # Step 6: Get index of this movie from its title
+            #     list_movie_index = []
+            #     for movieId in ratings["movieId"]:
+            #         movie_index = get_index_from_movieid(movieId)
+            #         list_movie_index.append(movie_index)
+
+            #     list_similar_movies = []
+            #     for movie_index in list_movie_index:
+            #         similar_movies = list(enumerate(cosine_sim[movie_index]))
+            #         list_similar_movies.append(similar_movies)
+
+            #     # Step 7: Get a list of similar movies in descending order of similarity score
+            #     list_sorted_similar_movies = []
+            #     for similar_movies in list_similar_movies:
+            #         sorted_similar_movies = sorted(
+            #             similar_movies, key=lambda x: x[1], reverse=True)
+            #         list_sorted_similar_movies.append(sorted_similar_movies)
+
+            #     #Step 8: Print titles of first 12 movies
+            #     for list_movie in list_sorted_similar_movies:
+            #         list_temp = []
+            #         count = 0
+            #         for movie in list_movie:
+            #             movieid = int(get_id_from_index(movie[0]))
+            #             title = get_title_from_index(movie[0])
+            #             rating = get_rating_from_movieid(movieid, user_id)
+            #             list_temp.append(
+            #                 {'id': movieid, 'title': title, 'rating': rating})
+            #             count = count + 1
+            #             if count > 12:
+            #                 break
+            #         res.append({'type': 'recommend', 'movie_data': list_temp})
+
+            # Collaborative recommend
+            def get_colla_movies():
+                ratings = pd.merge(all_dataframe, all_ratings).drop(
+                    ['genres', 'timestamp'], axis=1)
+
+                def standardize(row):
+                    new_row = np.subtract(row, row.mean(), dtype=np.float32)
+                    return new_row
+
+                userRatings = ratings.pivot_table(index=['userId'], columns=[
+                    'movieId'], values='rating')
+                userRatings = userRatings.dropna(thresh=10, axis=1)
+                userRatings_std = userRatings.apply(standardize)
+                userRatings_std = userRatings_std.fillna(0, axis=1)
+
+                item_similarity = cosine_similarity(userRatings_std.T)
+                item_similarity_df = pd.DataFrame(
+                    item_similarity, index=userRatings.columns, columns=userRatings.columns)
+
+                def get_colla_similar_movies(movie_name, rating):
+                    similar_ratings = item_similarity_df[movie_name]*(
+                        rating-2.5)
+                    similar_ratings = similar_ratings.sort_values(
+                        ascending=False)
+                    return similar_ratings
+
+                # 165-Back to the Future Part II
+                    # 364-Batman Returns
+                    # 260-The 39 Steps
+                romantic_lover = [(165, 4), (364, 3), (260, 1)]
+                colla_similar_movies = pd.DataFrame()
+                for movie, rating in romantic_lover:
+                    colla_similar_movies = colla_similar_movies.append(
+                        get_colla_similar_movies(movie, rating))
+
+                colla_similar_movies = colla_similar_movies.sum().sort_values(ascending=False)
+                colla_similar_movies_id = []
+                count = 0
+                for movie in colla_similar_movies:
+                    count = count + 1
+                    # get column name with specific value (ratings)
+                    movieId = (colla_similar_movies == movie).idxmax(axis=1)
+                    rating = get_rating_from_movieid(movieId, user_id)
+                    colla_similar_movies_id.append(
+                        {'id': int(movieId), 'rating': rating})
+                    if count > 11:
+                        break
+                res.append(
+                    {'type': 'colla', 'movie_data': colla_similar_movies_id})
+
+            # -1 means NEW USER skip choosing his fav genres
+            # the second condition means old user but has no interations with the system
+            if genres != '-1' or not all_ratings[all_ratings.userId == int(user_id)].empty:
+
+                # get_contentbased_movies()
+                get_colla_movies()
+
+            return res
+        return {'movie': recommend()}
+
+
+class Search(Resource):
+    def get(self, query):
+        dataframe = pd.read_csv("movies_metadata.csv")
+
+        def get_kw(row):
+            row = ast.literal_eval(row)
+            res = ''
+            for i in row:
+                res += i['name']+' '
+            return res
+
+        # Select Features
+        features = ['genres', 'title']  # keyword, cast overview
+
+        # Create a column in dataframe which combines all selected features
+        for feature in features:
+            dataframe[feature] = dataframe[feature].fillna('')
+
+        def combined_features(row):
+            try:
+                return get_kw(row['genres']) + row['title']
+            except:
+                print("Error: ", row)
+
+        dataframe['combined_features'] = dataframe.apply(
+            combined_features, axis=1)
+        dataframe['combined_features']
+        dataframe = dataframe[dataframe['combined_features'].str.lower().str.contains(
+            query.lower(), regex=False)]
+        dataframe = dataframe.nlargest(20, ['vote_average'])
+
+        res = []
+        temp = []
+        count = 0
+        index = 0
+        for movieId in dataframe["movieId"]:
+            index = index + 1
+            temp.append({'id': movieId})
+            count = count + 1
+            if count == 7 or index == 21:
+                res.append({'type': 'search', 'movie_data': temp})
+                temp = []
+                count = 0
+        return {'result': res}
+
+
+class WriteCSV(Resource):
+    def post(self):
+        data = request.get_json()
+        mean_rating = data['rating']
+        # rating param = -2 represents user-clicking point, not user rating
+        if mean_rating == -2:
+            ratings = pd.read_csv('ratings.csv')
+            ratings = ratings[ratings.userId == data['userid']]
+            # calculate mean rating of current user
+            mean_rating = ratings["rating"].mean()
+        with open('ratings.csv', 'a', newline='') as f:
+            thewriter = csv.writer(f)
+            ratings = pd.read_csv("ratings.csv")
+            ratings = ratings[ratings.movieId ==
+                              data["id"]][ratings.userId == 592]
+            ratings = ratings.nlargest(1, ['timestamp'])
+            if not ratings.empty and data['rating'] == -2:
+                return response('Failed to add rating', 200)
+            if not ratings.empty and ratings["rating"].values[0] == mean_rating:
+                return response('Dupplicate ratings', 200)
+            thewriter.writerow(['592', data["id"], mean_rating,
+                                datetime.timestamp(datetime.now())])
+            return response('Added rating successfully', 200)
+        return response('Failed to add rating', 500) '''
