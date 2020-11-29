@@ -4,6 +4,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import ReadData as data
 import codecs
+from sklearn.model_selection import train_test_split
+
 
 ##### FUNCTION #####
 #a function to combine the values of the important columns into a single string
@@ -99,6 +101,9 @@ def ShowResults(top, list, laptopName):
 # 1. get data
 df = data.getDataProducts()
 #df = data.getDataReviews()
+
+
+
 laptopInput='Laptop Dell Inspiron 7591 i5 9300H/8GB/256GB/3GB GTX1050/Win10 (N5I5591W)'
 #laptopInput='Laptop Apple MacBook Air 2020 i5 1.1GHz/8GB/256GB (Z0YL)'
 
