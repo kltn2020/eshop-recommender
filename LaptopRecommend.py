@@ -6,6 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ReadData as data
 import codecs
 import KNNCollaborativeFiltering as BNCF
+import MFCollaborativeFiltering as MFCF
 from sklearn.model_selection import train_test_split
 
 # Constant value
@@ -85,6 +86,19 @@ def get_KNN_CF(userID, df):
     return rs.get_recommendation(userID)
 
 
+def get_MF_CF(userID, df):
+    # prepare data
+    dfRating = df.filter(items=['user_id', 'product_id', 'point'])
+    rate_train, rate_test = train_test_split(dfRating, test_size=CONST_TEST_PERCENT) 
+
+    # Training data
+    Y_data = rate_train.to_numpy()
+    rs = MFCF.MF_CF(Y_data, K = 2, max_iter = 1000, print_every = 1000)
+    rs.training()
+
+    rs.pred(6, 1)
+
+
 def ShowResults(top, list):
     i=1
     print("===== LAPTOPS RECOMMEND =====")
@@ -106,7 +120,7 @@ laptopInput='Laptop Dell Inspiron 7591 i5 9300H/8GB/256GB/3GB GTX1050/Win10 (N5I
 
 # 2. get recommend laptop list
 #laptopsRecommend = get_contentbased_laptops(laptopInput, dfProducts)
-#laptopsRecommend = get_MF_CF(inputUserID, dfReviews)
+#get_MF_CF(inputUserID, dfReviews)
 laptopsRecommend = get_KNN_CF(inputUserID, dfReviews)
 
 # 3

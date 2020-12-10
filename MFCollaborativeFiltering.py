@@ -4,7 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from scipy import sparse 
 
 class MF_CF(object):
-    """docstring for CF"""
+    """Matrix Factorization Collaborative Filtering"""
     def __init__(self, Y_data, K, lam = 0.1, Xinit = None, Winit = None, 
             learning_rate = 0.5, max_iter = 1000, print_every = 100, user_based = 0):
         self.Y_data = Y_data
@@ -49,7 +49,7 @@ class MF_CF(object):
 
         users = self.Y_data[:, user_col] 
         self.muu = np.zeros((n_objects,))
-        for n in xrange(n_objects):
+        for n in range(n_objects):
             # row indices of rating done by user n
             # since indices need to be integers, we need to convert
             ids = np.where(users == n)[0].astype(np.int32)
@@ -68,7 +68,7 @@ class MF_CF(object):
             
     def loss(self):
         L = 0 
-        for i in xrange(self.n_ratings):
+        for i in range(self.n_ratings):
             # user, item, rating
             n, m, rate = int(self.Y_data[i, 0]), int(self.Y_data[i, 1]), self.Y_data[i, 2]
             L += 0.5*(self.X[m, :].dot(self.W[:, n]) + self.b[m] + self.d[n] + self.mu - rate)**2
@@ -104,7 +104,7 @@ class MF_CF(object):
         return (user_ids, ratings)
         
     def updateX(self):
-        for m in xrange(self.n_items):
+        for m in range(self.n_items):
             user_ids, ratings = self.get_users_who_rate_item(m)
             
             Wm = self.W[:, user_ids]
@@ -119,7 +119,7 @@ class MF_CF(object):
             self.b[m] -= self.learning_rate*grad_bm
     
     def updateW(self):
-        for n in xrange(self.n_users):
+        for n in range(self.n_users):
             item_ids, ratings = self.get_items_rated_by_user(n)
             Xn = self.X[item_ids, :]
             bn = self.b[item_ids]
@@ -131,14 +131,14 @@ class MF_CF(object):
             self.W[:, n] -= self.learning_rate*grad_wn.reshape((self.K,))
             self.d[n] -= self.learning_rate*grad_dn
     
-    def fit(self):
+    def training(self):
         self.normalize_Y()
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             self.updateX()
             self.updateW()
             if (it + 1) % self.print_every == 0:
                 rmse_train = self.evaluate_RMSE(self.Y_data)
-                print 'iter =', it + 1, ', loss =', self.loss(), ', RMSE train =', rmse_train
+                print('iter =', it + 1, ', loss =', self.loss(), ', RMSE train =', rmse_train)
     
     
     def pred(self, u, i):
@@ -168,7 +168,7 @@ class MF_CF(object):
         
         y_pred = self.X.dot(self.W[:, user_id])
         predicted_ratings= []
-        for i in xrange(self.n_items):
+        for i in range(self.n_items):
             if i not in items_rated_by_u:
                 predicted_ratings.append((i, y_pred[i]))
         
@@ -177,19 +177,10 @@ class MF_CF(object):
     def evaluate_RMSE(self, rate_test):
         n_tests = rate_test.shape[0]
         SE = 0 # squared error
-        for n in xrange(n_tests):
+        for n in range(n_tests):
             pred = self.pred(rate_test[n, 0], rate_test[n, 1])
             SE += (pred - rate_test[n, 2])**2 
 
         RMSE = np.sqrt(SE/n_tests)
         return RMSE
         
-r_cols = ['user_id', 'item_id', 'rating']
-ratings = pd.read_csv('ex.dat', sep = ' ', names = r_cols, encoding='latin-1')
-Y_data = ratings.as_matrix()
-
-
-rs = MF(Y_data, K = 2, max_iter = 1000, print_every = 1000)
-
-rs.fit()
-rs.pred(6, 1)
