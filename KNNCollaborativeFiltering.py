@@ -37,7 +37,7 @@ class KNN_CF(object):
             # take mean
             m = np.mean(ratings)
             if np.isnan(m):
-                m = 0 # to avoid empty array and nan value
+                m = 2.5 # to avoid empty array and nan value
             self.mu[n] = m
             # normalize
             self.Ybar_data[ids, 2] = ratings - self.mu[n]
@@ -57,16 +57,13 @@ class KNN_CF(object):
         self.S = self.dist_func(self.Ybar.T, self.Ybar.T)
     
         
-    def refresh(self):
+    def training(self):
         """
         Normalize data and calculate similarity matrix again (after
         some few ratings added)
         """
         self.normalize_Y()
         self.similarity() 
-        
-    def fit(self):
-        self.refresh()
         
     
     def __pred(self, u, i, normalized = 1):
@@ -117,18 +114,21 @@ class KNN_CF(object):
             if i not in items_rated_by_u:
                 rating = self.__pred(u, i)
                 if rating > 0: 
-                    recommended_items.append(i)
-        
-        return recommended_items 
+                    recommended_items.append([i, rating])
+        #Sorting
+        recommended_items.sort(reverse=True, key=lambda x:x[1]) 
 
-    def print_recommendation(self):
+        return recommended_items
+
+    def get_recommendation(self, userID):
         """
         print all items which should be recommended for each user 
         """
-        print ('Recommendation: ')
-        for u in range(self.n_users):
-            recommended_items = self.recommend(u)
-            if self.uuCF:
-                print ('    Recommend item(s):', recommended_items, 'for user', u)
-            else: 
-                print ('    Recommend item', u, 'for user(s) : ', recommended_items)
+
+        #for u in range(self.n_users):
+        recommended_items = self.recommend(userID)
+        return recommended_items
+        #if self.uuCF:
+        #    print ('    Recommend item(s):', recommended_items, 'for user', userID)
+        #else: 
+        #    print ('    Recommend item', userID, 'for user(s) : ', recommended_items)
