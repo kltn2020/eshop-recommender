@@ -74,10 +74,13 @@ class KNN_CF(object):
         # Step 1: find all users who rated i
         ids = np.where(self.Y_data[:, 1] == i)[0].astype(np.int32)
         # Step 2: 
-        users_rated_i = (self.Y_data[ids, 0]).astype(np.int32)
+        users_rated_i = (self.Y_data[ids, 0]).astype(np.int32)        
+
         # Step 3: find similarity btw the current user and others 
         # who already rated i
+        #sim = self.S[u, users_rated_i]
         sim = self.S[u, users_rated_i]
+
         # Step 4: find the k most similarity users
         a = np.argsort(sim)[-self.k:] 
         # and the corresponding similarity levels
