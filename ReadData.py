@@ -3,12 +3,18 @@ import psycopg2
 from config import config
 from pandas import DataFrame
 import codecs
+import os
 
-# define constant
-HOST_IP = "localhost"
-DB_NAME = "eshop"
-USER_NAME = "postgres"
-PASS = "password123"
+# define default env
+DB_HOST_IP='localhost'
+DB_NAME='eshop'
+DB_USER_NAME='postgres'
+DB_USER_PASS='password123'
+
+HOST_IP = os.getenv('DB_HOST_IP', DB_HOST_IP)
+DB_NAME = os.getenv('DB_NAME', DB_NAME)
+USER_NAME = os.getenv('DB_USER_NAME', DB_USER_NAME)
+PASS = os.getenv('DB_USER_PASS', DB_USER_PASS)
 
 # write file function
 def writeFile(list, fileName):
@@ -89,6 +95,35 @@ def getDataReviews():
 
     return df
 
+def GetProductID(user_id):
+    conn = None
+    product_id = 0
+
+    try:
+        conn = psycopg2.connect(host=HOST_IP,
+                database=DB_NAME,
+                user=USER_NAME,
+                password=PASS)
+        cur = conn.cursor()
+        sql_query = 'SELECT product_id FROM user_view_products WHERE user_id = ' + str(user_id) + ' ORDER BY inserted_at DESC LIMIT 1'
+        cur.execute(sql_query)
+
+        record = cur.fetchone()
+        product_id = record[0]
+
+	    # close the communication with the PostgreSQL
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
+    print("product_id: ", product_id)
+    return product_id
+
 if __name__ == '__main__':
-    getDataProducts()
-    getDataReviews()
+    #getDataProducts()
+    #getDataReviews()
+    GetProductID(1)
