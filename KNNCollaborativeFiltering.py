@@ -37,7 +37,7 @@ class KNN_CF(object):
             # take mean
             m = np.mean(ratings)
             if np.isnan(m):
-                m = 2.5 # to avoid empty array and nan value
+                m = 0 # to avoid empty array and nan value
             self.mu[n] = m
             # normalize
             self.Ybar_data[ids, 2] = ratings - self.mu[n]
