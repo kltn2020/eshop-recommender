@@ -100,19 +100,6 @@ class LaptopRecommend(object):
         print ('User-user CF, (Root mean square error) RMSE =', RMSE)
         return rs.get_recommendation(userID)
 
-
-    def get_MF_CF(self, userID):
-        # prepare data
-        df = self.dfReviews
-        dfRating = df.filter(items=['user_id', 'product_id', 'point'])
-        rate_train, rate_test = train_test_split(dfRating, test_size=CONST_TEST_PERCENT) 
-
-        # Training data
-        Y_data = rate_train.to_numpy()
-        rs = MFCF.MF_CF(Y_data, K = 2, max_iter = 1000, print_every = 1000)
-        rs.training()
-        rs.pred(6, 1)
-
 ##### MAIN #####
 # 1. get data
 #lapRecommend = LaptopRecommend()

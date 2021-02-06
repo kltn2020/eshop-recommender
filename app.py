@@ -27,6 +27,9 @@ def content_based_recommend():
     if product_id == 0:
         product_id = ReadData.GetProductID(user_id)
 
+    print("user_id: ", user_id)
+    print("product_id: ", product_id)
+
     # init data recommend
     lapRecommender = LaptopRecommend.LaptopRecommend()
 
@@ -37,13 +40,15 @@ def content_based_recommend():
     arrOut = []
     for row in arr:
         arrOut.append(row[0])
-        
+
+    print("ket qua: ",  arrOut)
     return jsonify(arrOut)
 
 @app.route("/collaborative_recommend")
 def collaborative_recommend():
     user_id = int(request.args.get('user_id'))
     lapRecommender = LaptopRecommend.LaptopRecommend()
+    print("user_id: ", user_id)
 
     # goi ham tra ve list 20 product id
     arr = lapRecommender.get_KNN_CF(user_id)[:CONST_COUNT_TOP]
@@ -52,8 +57,9 @@ def collaborative_recommend():
     arrOut = []
     for row in arr:
         arrOut.append(row[0])
-        
+
+    print("ket qua: ", arrOut)
     return jsonify(arrOut)
 
 if __name__ == "__main__":
-    app.run(host="localhost", port=int("5000"), debug=False)
+    app.run(host="0.0.0.0", port=int("5000"), debug=False)
