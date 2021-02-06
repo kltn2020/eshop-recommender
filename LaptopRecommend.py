@@ -6,7 +6,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import ReadData as data
 import codecs
 import KNNCollaborativeFiltering as BNCF
-import MFCollaborativeFiltering as MFCF
 from sklearn.model_selection import train_test_split
 
 # Constant value
@@ -79,25 +78,13 @@ class LaptopRecommend(object):
         # prepare data
         df = self.dfReviews
         dfRating = df.filter(items=['user_id', 'product_id', 'point'])
-        rate_train, rate_test = train_test_split(dfRating, test_size=CONST_TEST_PERCENT)        
+        rate_train = dfRating
 
         # Training data
         Y_data = rate_train.to_numpy()
         rs = BNCF.KNN_CF(Y_data, k = CONST_K, uuCF = CONST_UUCF)
         rs.training()
 
-        n_tests = rate_test.shape[0]
-        SE = 0 # squared error
-        for index, row in rate_test.iterrows():
-            u_id = row[0]
-            i_id = row[1]
-            point = row[2]
-            #print (u_id, i_id, point)
-            pred = rs.pred(u_id, i_id, normalized = 0)
-            SE += (pred - point)**2 
-
-        RMSE = np.sqrt(SE/n_tests)
-        print ('User-user CF, (Root mean square error) RMSE =', RMSE)
         return rs.get_recommendation(userID)
 
 ##### MAIN #####
