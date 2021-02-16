@@ -101,37 +101,3 @@ def getDataReviews():
             #print('Database connection closed.')
 
     return df
-
-
-def GetProductID(user_id):
-    conn = None
-    product_id = 0
-
-    try:
-        conn = psycopg2.connect(host=HOST_IP,
-                                database=DB_NAME,
-                                user=USER_NAME,
-                                password=PASS)
-        cur = conn.cursor()
-        sql_query = 'SELECT product_id FROM user_view_products WHERE user_id = ' + \
-            str(user_id) + ' ORDER BY inserted_at DESC LIMIT 1'
-        cur.execute(sql_query)
-
-        record = cur.fetchone()
-        product_id = record[0]
-
-        # close the communication with the PostgreSQL
-        cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            print('Database connection closed.')
-
-    #print("product_id: ", product_id)
-    return product_id
-
-
-if __name__ == '__main__':
-    GetProductID(1)

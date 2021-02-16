@@ -2,7 +2,6 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 import LaptopRecommend
-import ReadData
 
 CONST_COUNT_TOP = 20
 
@@ -25,8 +24,12 @@ def content_based_recommend():
     except:
         product_id = 0
 
-    if product_id == 0:
-        product_id = ReadData.GetProductID(user_id)
+    # get limit
+    limit = CONST_COUNT_TOP
+    try:
+        limit = int(request.args.get('limit'))
+    except:
+        limit = 0
 
     #print("user_id: ", user_id)
     #print("product_id: ", product_id)
@@ -35,7 +38,7 @@ def content_based_recommend():
     lapRecommender = LaptopRecommend.LaptopRecommend()
 
     # return list  product id
-    arr = lapRecommender.get_contentbased_laptops(product_id)[:CONST_COUNT_TOP]
+    arr = lapRecommender.get_contentbased_laptops(product_id)[:limit]
     # print(arr)
 
     arrOut = []
@@ -48,12 +51,24 @@ def content_based_recommend():
 
 @app.route("/collaborative_recommend")
 def collaborative_recommend():
-    user_id = int(request.args.get('user_id'))
+    # get user_id
+    user_id = 0
+    try:
+        user_id = int(request.args.get('user_id'))
+    except:
+        user_id = 0
+
+    # get limit
+    limit = CONST_COUNT_TOP
+    try:
+        limit = int(request.args.get('limit'))
+    except:
+        limit = 0
     lapRecommender = LaptopRecommend.LaptopRecommend()
     #print("user_id: ", user_id)
 
     # return list product id
-    arr = lapRecommender.get_KNN_CF(user_id)[:CONST_COUNT_TOP]
+    arr = lapRecommender.get_KNN_CF(user_id)[:limit]
     # print(arr)
 
     arrOut = []
