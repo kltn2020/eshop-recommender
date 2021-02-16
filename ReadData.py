@@ -6,10 +6,10 @@ import codecs
 import os
 
 # define default env
-DB_HOST_IP='localhost'
-DB_NAME='eshop'
-DB_USER_NAME='postgres'
-DB_USER_PASS='password123'
+DB_HOST_IP = 'localhost'
+DB_NAME = 'eshop'
+DB_USER_NAME = 'postgres'
+DB_USER_PASS = 'password123'
 
 HOST_IP = os.getenv('DB_HOST_IP', DB_HOST_IP)
 DB_NAME = os.getenv('DB_NAME', DB_NAME)
@@ -17,28 +17,33 @@ USER_NAME = os.getenv('DB_USER_NAME', DB_USER_NAME)
 PASS = os.getenv('DB_USER_PASS', DB_USER_PASS)
 
 # write file function
+
+
 def writeFile(list, fileName):
-    file = codecs.open(fileName, "w", "utf-8")       
+    file = codecs.open(fileName, "w", "utf-8")
     for row in list:
         file.write('\n' + str(row))
+
     file.close()
 
 # items info
+
+
 def getDataProducts():
     conn = None
     df = None
 
     try:
         # read connection parameters
-        #params = config()
+        # params = config()
         # connect to the PostgreSQL server
-        #print('Connecting to the PostgreSQL database...')
-        #conn = psycopg2.connect(**params)
+        # print('Connecting to the PostgreSQL database...')
+        # conn = psycopg2.connect(**params)
         conn = psycopg2.connect(host=HOST_IP,
-                database=DB_NAME,
-                user=USER_NAME,
-                password=PASS)
-		
+                                database=DB_NAME,
+                                user=USER_NAME,
+                                password=PASS)
+
         cur = conn.cursor()
         sql_query = 'SELECT * FROM public.products ORDER BY id ASC'
         cur.execute(sql_query)
@@ -47,34 +52,36 @@ def getDataProducts():
         df = DataFrame(records)
         df.columns = [desc[0] for desc in cur.description]
 
-        print("Total rows are:  ", len(records))
-	    # close the communication with the PostgreSQL
+        #print("Total rows are:  ", len(records))
+        # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
+            #print('Database connection closed.')
 
     return df
 
 # user review info
+
+
 def getDataReviews():
     conn = None
     df = None
 
     try:
         # read connection parameters
-        #params = config()
+        # params = config()
         # connect to the PostgreSQL server
-        #print('Connecting to the PostgreSQL database...')
-        #conn = psycopg2.connect(**params)
+        # print('Connecting to the PostgreSQL database...')
+        # conn = psycopg2.connect(**params)
         conn = psycopg2.connect(host=HOST_IP,
-                database=DB_NAME,
-                user=USER_NAME,
-                password=PASS)
-		
+                                database=DB_NAME,
+                                user=USER_NAME,
+                                password=PASS)
+
         cur = conn.cursor()
         sql_query = 'SELECT * FROM public.reviews'
         cur.execute(sql_query)
@@ -83,17 +90,18 @@ def getDataReviews():
         df = DataFrame(records)
         df.columns = [desc[0] for desc in cur.description]
 
-        print("Total rows are:  ", len(records))
-	    # close the communication with the PostgreSQL
+        #print("Total rows are:  ", len(records))
+        # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if conn is not None:
             conn.close()
-            print('Database connection closed.')
+            #print('Database connection closed.')
 
     return df
+
 
 def GetProductID(user_id):
     conn = None
@@ -101,17 +109,18 @@ def GetProductID(user_id):
 
     try:
         conn = psycopg2.connect(host=HOST_IP,
-                database=DB_NAME,
-                user=USER_NAME,
-                password=PASS)
+                                database=DB_NAME,
+                                user=USER_NAME,
+                                password=PASS)
         cur = conn.cursor()
-        sql_query = 'SELECT product_id FROM user_view_products WHERE user_id = ' + str(user_id) + ' ORDER BY inserted_at DESC LIMIT 1'
+        sql_query = 'SELECT product_id FROM user_view_products WHERE user_id = ' + \
+            str(user_id) + ' ORDER BY inserted_at DESC LIMIT 1'
         cur.execute(sql_query)
 
         record = cur.fetchone()
         product_id = record[0]
 
-	    # close the communication with the PostgreSQL
+        # close the communication with the PostgreSQL
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
@@ -120,10 +129,9 @@ def GetProductID(user_id):
             conn.close()
             print('Database connection closed.')
 
-    print("product_id: ", product_id)
+    #print("product_id: ", product_id)
     return product_id
 
+
 if __name__ == '__main__':
-    #getDataProducts()
-    #getDataReviews()
     GetProductID(1)
