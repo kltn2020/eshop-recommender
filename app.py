@@ -29,10 +29,10 @@ def content_based_recommend():
     try:
         limit = int(request.args.get('limit'))
     except:
-        limit = 0
+        limit = CONST_COUNT_TOP
 
-    #print("user_id: ", user_id)
-    #print("product_id: ", product_id)
+    # print("user_id: ", user_id)
+    # print("product_id: ", product_id)
 
     # init data recommend
     lapRecommender = LaptopRecommend.LaptopRecommend()
@@ -63,7 +63,7 @@ def collaborative_recommend():
     try:
         limit = int(request.args.get('limit'))
     except:
-        limit = 0
+        limit = CONST_COUNT_TOP
     lapRecommender = LaptopRecommend.LaptopRecommend()
     #print("user_id: ", user_id)
 
