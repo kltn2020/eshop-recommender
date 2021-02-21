@@ -81,6 +81,15 @@ class KNN_CF(object):
 
         return (r*nearest_s)[0]/(np.abs(nearest_s).sum() + 1e-8) + self.mu[u]
 
+    def pred(self, u, i, normalized = 1):
+        """ 
+        predict the rating of user u for item i (normalized)
+        if you need the un
+        """
+        if self.uuCF: 
+            return self.__pred(u, i, normalized)
+        return self.__pred(i, u, normalized)
+
     def recommend(self, u):
         """
         Xác định tất cả các item nên được đề nghị cho người dùng u.
@@ -106,3 +115,17 @@ class KNN_CF(object):
         """
         recommended_items = self.recommend(userID)
         return recommended_items
+
+    def getRMSE(self, rate_test): 
+        n_tests = rate_test.shape[0]
+        SE = 0 # squared error
+        for index, row in rate_test.iterrows():
+            u_id = row[0]
+            i_id = row[1]
+            point = row[2]
+            #print (u_id, i_id, point)
+            pred = self.pred(u_id, i_id, normalized = 0)
+            SE += (pred - point)**2 
+
+        RMSE = np.sqrt(SE/n_tests)
+        return RMSE

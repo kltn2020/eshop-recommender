@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 # Constant value
 CONST_K = 100  # K Neighbor User
 CONST_UUCF = 1
-CONST_TEST_PERCENT = 0.05  # only TEST 5%
+CONST_TEST_PERCENT = 0.1  # only TEST 10%
 
 ##### FUNCTION #####
 # hàm để kết hợp các giá trị của các cột quan trọng thành một chuỗi đơn
@@ -72,11 +72,13 @@ class LaptopRecommend(object):
         # prepare data
         df = self.dfReviews
         dfRating = df.filter(items=['user_id', 'product_id', 'point'])
-        rate_train = dfRating
+        rate_train, rate_test = train_test_split(dfRating, test_size=CONST_TEST_PERCENT)   
 
         # Training data
         Y_data = rate_train.to_numpy()
         rs = BNCF.KNN_CF(Y_data, k=CONST_K, uuCF=CONST_UUCF)
         rs.training()
+
+        print ('User-user CF, (Root mean square error) RMSE =', rs.getRMSE(rate_test))
 
         return rs.get_recommendation(userID)

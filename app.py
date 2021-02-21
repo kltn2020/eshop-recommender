@@ -7,9 +7,10 @@ CONST_COUNT_TOP = 20
 
 app = Flask(__name__)
 
-
+# http://localhost:5000/content_based_recommend?user_id=15&product_id=5&limit=5
 @app.route("/content_based_recommend")
 def content_based_recommend():
+    print("========= content_based_recommend =========")
     # get user_id
     user_id = 0
     try:
@@ -49,8 +50,10 @@ def content_based_recommend():
     return jsonify(arrOut)
 
 
+# http://localhost:5000/collaborative_recommend?user_id=15&product_id=5&limit=5
 @app.route("/collaborative_recommend")
 def collaborative_recommend():
+    print("========= collaborative_recommend =========")
     # get user_id
     user_id = 0
     try:
